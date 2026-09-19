@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Quota continueOnError="false" enabled="true" name="Q-TokenQuota-Count">
+  <DisplayName>Q-TokenQuota-Count</DisplayName>
+  <!-- Charges the tokens the model actually used to the same shared counter. -->
+  <Allow countRef="gw.token_quota" count="10000"/>
+  <Interval>1</Interval>
+  <TimeUnit>hour</TimeUnit>
+  <Identifier ref="client_id"/>
+  <Distributed>true</Distributed>
+  <Synchronous>true</Synchronous>
+  <MessageWeight ref="llm.total_tokens"/>
+  <SharedName>llm-token-budget</SharedName>
+  <CountOnly>true</CountOnly>
+</Quota>

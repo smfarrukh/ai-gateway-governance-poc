@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy name="ai-tools-gateway">
+  <DisplayName>AI Tools Gateway</DisplayName>
+  <Description>Governed access for agents to MCP servers (ServiceNow, Salesforce) and REST tools (knowledge base).</Description>
+</APIProxy>

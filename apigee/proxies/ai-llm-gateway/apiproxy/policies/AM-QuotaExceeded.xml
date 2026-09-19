@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-QuotaExceeded">
+  <DisplayName>AM-QuotaExceeded</DisplayName>
+  <AssignVariable>
+    <Name>gw.decision</Name>
+    <Value>denied:token_quota_exceeded</Value>
+  </AssignVariable>
+  <Set>
+    <Payload contentType="application/json" variablePrefix="@" variableSuffix="#">{"error":{"type":"policy_violation","code":"token_quota_exceeded","message":"This agent has used its hourly LLM token budget. Ask the platform team to raise it."}}</Payload>
+    <StatusCode>429</StatusCode>
+    <ReasonPhrase>Too Many Requests</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

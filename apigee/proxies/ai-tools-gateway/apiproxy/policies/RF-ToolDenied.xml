@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-ToolDenied">
+  <DisplayName>RF-ToolDenied</DisplayName>
+  <FaultResponse>
+    <Set>
+      <Headers>
+        <Header name="x-ai-gateway-decision">{gw.decision}</Header>
+      </Headers>
+      <Payload contentType="application/json">{gw.deny_body}</Payload>
+      <StatusCode>200</StatusCode>
+      <ReasonPhrase>OK</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

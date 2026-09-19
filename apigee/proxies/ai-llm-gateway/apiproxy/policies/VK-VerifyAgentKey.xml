@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<VerifyAPIKey continueOnError="false" enabled="true" name="VK-VerifyAgentKey">
+  <DisplayName>VK-VerifyAgentKey</DisplayName>
+  <!-- Every agent (GCP, AWS, Azure) has its own Apigee app and key = its identity. -->
+  <APIKey ref="request.header.x-api-key"/>
+</VerifyAPIKey>

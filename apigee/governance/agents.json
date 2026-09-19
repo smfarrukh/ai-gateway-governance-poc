@@ -1,0 +1,50 @@
+{
+  "_comment": "Governance catalogue: one Apigee API product (the policy) and one app (the identity) per agent. Tool names support * wildcards.",
+  "developer": {
+    "email": "ai-agents@contoso.example",
+    "firstName": "AI",
+    "lastName": "Agents",
+    "userName": "ai-agents"
+  },
+  "agents": [
+    {
+      "app": "itsm-agent-gcp",
+      "product": "agent-itsm-gcp",
+      "displayName": "IT Service Desk Agent (Google Cloud)",
+      "description": "Handles IT incidents. May create, update and close ServiceNow incidents. No CRM access. PII masked.",
+      "attributes": {
+        "agent_cloud": "gcp",
+        "allowed_models": "gemini-*",
+        "allowed_tools": "sn_*,kb_search",
+        "pii_access": "false",
+        "token_quota_per_hour": "60000"
+      }
+    },
+    {
+      "app": "sales-agent-aws",
+      "product": "agent-sales-aws",
+      "displayName": "Sales Account Agent (AWS)",
+      "description": "Account management. Full Salesforce access including opportunity updates and contact PII. No ITSM access.",
+      "attributes": {
+        "agent_cloud": "aws",
+        "allowed_models": "openai.gpt-oss-*",
+        "allowed_tools": "sf_*,kb_search",
+        "pii_access": "true",
+        "token_quota_per_hour": "60000"
+      }
+    },
+    {
+      "app": "cx-agent-azure",
+      "product": "agent-cx-azure",
+      "displayName": "Customer 360 Agent (Azure)",
+      "description": "Customer-facing overview. Read-only ServiceNow and Salesforce tools. PII masked. Small token budget.",
+      "attributes": {
+        "agent_cloud": "azure",
+        "allowed_models": "gpt-5-mini",
+        "allowed_tools": "sn_get_incident,sn_list_incidents,sf_search_accounts,sf_get_account,sf_get_case,kb_search",
+        "pii_access": "false",
+        "token_quota_per_hour": "30000"
+      }
+    }
+  ]
+}

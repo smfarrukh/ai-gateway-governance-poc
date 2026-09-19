@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<MessageLogging continueOnError="true" enabled="true" name="ML-AuditLog">
+  <DisplayName>ML-AuditLog</DisplayName>
+  <CloudLogging>
+    <LogName>projects/{organization.name}/logs/ai-gateway-audit</LogName>
+    <Message contentType="application/json">{gw.audit_json}</Message>
+    <Labels>
+      <Label>
+        <Key>agent</Key>
+        <Value>{gw.agent}</Value>
+      </Label>
+      <Label>
+        <Key>decision</Key>
+        <Value>{gw.decision}</Value>
+      </Label>
+    </Labels>
+    <ResourceType>global</ResourceType>
+  </CloudLogging>
+</MessageLogging>

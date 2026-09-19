@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-AuthFailed">
+  <DisplayName>AM-AuthFailed</DisplayName>
+  <AssignVariable>
+    <Name>gw.decision</Name>
+    <Value>denied:invalid_agent_key</Value>
+  </AssignVariable>
+  <Set>
+    <Payload contentType="application/json" variablePrefix="@" variableSuffix="#">{"error":{"type":"policy_violation","code":"unauthorized_agent","message":"Unknown, missing or revoked agent API key. Only registered agents may use AI services."}}</Payload>
+    <StatusCode>401</StatusCode>
+    <ReasonPhrase>Unauthorized</ReasonPhrase>
+  </Set>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</AssignMessage>

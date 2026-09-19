@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ServiceCallout continueOnError="true" enabled="true" name="SC-ModelArmor">
+  <DisplayName>SC-ModelArmor</DisplayName>
+  <!-- Screens the newest user/tool text for prompt injection, jailbreaks, sensitive data and harmful content. -->
+  <Request variable="modelArmorRequest">
+    <Set>
+      <Headers>
+        <Header name="Content-Type">application/json</Header>
+      </Headers>
+      <Payload contentType="application/json">{llm.armor_payload}</Payload>
+      <Verb>POST</Verb>
+    </Set>
+    <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+  </Request>
+  <Response>modelArmorResponse</Response>
+  <HTTPTargetConnection>
+    <Authentication>
+      <GoogleAccessToken>
+        <Scopes>
+          <Scope>https://www.googleapis.com/auth/cloud-platform</Scope>
+        </Scopes>
+      </GoogleAccessToken>
+    </Authentication>
+    <URL>https://modelarmor.{{MODEL_ARMOR_LOCATION}}.rep.googleapis.com/v1/projects/{{GCP_PROJECT_ID}}/locations/{{MODEL_ARMOR_LOCATION}}/templates/{{MODEL_ARMOR_TEMPLATE}}:sanitizeUserPrompt</URL>
+  </HTTPTargetConnection>
+</ServiceCallout>

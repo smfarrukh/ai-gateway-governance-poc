@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <Description>Governed entry point for agent tools: /mcp/servicenow, /mcp/salesforce, /kb/search</Description>
+  <FaultRules>
+    <FaultRule name="invalid-agent-key">
+      <Condition>(fault.name = "InvalidApiKey") or (fault.name = "FailedToResolveAPIKey") or (fault.name = "ApiKeyNotApproved") or (fault.name = "InvalidApiKeyForGivenResource") or (fault.name = "consumer_key_expired") or (fault.name = "app_not_approved") or (fault.name = "developer_status_not_active")</Condition>
+      <Step>
+        <Name>AM-AuthFailed</Name>
+      </Step>
+    </FaultRule>
+    <FaultRule name="rate-limited">
+      <Condition>fault.name = "SpikeArrestViolation"</Condition>
+      <Step>
+        <Name>AM-RateLimited</Name>
+      </Step>
+    </FaultRule>
+  </FaultRules>
+  <DefaultFaultRule name="audit-on-error">
+    <AlwaysEnforce>true</AlwaysEnforce>
+    <Step>
+      <Name>JS-BuildAudit</Name>
+    </Step>
+  </DefaultFaultRule>
+  <PreFlow name="PreFlow">
+    <Request>
+        <Step>
+          <Name>VK-VerifyAgentKey</Name>
+        </Step>
+        <Step>
+          <Name>SA-AgentRateLimit</Name>
+        </Step>
+        <Step>
+          <Name>JS-ToolsRequestGuard</Name>
+        </Step>
+        <Step>
+          <Name>RF-Deny-404</Name>
+          <Condition>(tool.denied = "true") and (gw.deny_status = "404")</Condition>
+        </Step>
+        <Step>
+          <Name>RF-Deny-403</Name>
+          <Condition>(tool.denied = "true") and (gw.deny_status = "403")</Condition>
+        </Step>
+        <Step>
+          <Name>RF-Deny-400</Name>
+          <Condition>(tool.denied = "true") and (gw.deny_status = "400")</Condition>
+        </Step>
+        <Step>
+          <Name>RF-ToolDenied</Name>
+          <Condition>(tool.denied = "true") and (gw.deny_status = "200")</Condition>
+        </Step>
+    </Request>
+    <Response>
+        <Step>
+          <Name>JS-McpResponseFilter</Name>
+          <Condition>(tool.protocol = "mcp") and (response.status.code = 200)</Condition>
+        </Step>
+    </Response>
+  </PreFlow>
+  <Flows/>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response>
+        <Step>
+          <Name>JS-BuildAudit</Name>
+        </Step>
+    </Response>
+  </PostFlow>
+  <PostClientFlow name="PostClientFlow">
+    <Response>
+        <Step>
+          <Name>ML-AuditLog</Name>
+        </Step>
+    </Response>
+  </PostClientFlow>
+  <HTTPProxyConnection>
+    <BasePath>/ai/tools</BasePath>
+  </HTTPProxyConnection>
+  <RouteRule name="servicenow">
+    <Condition>tool.system = "servicenow"</Condition>
+    <TargetEndpoint>servicenow</TargetEndpoint>
+  </RouteRule>
+  <RouteRule name="salesforce">
+    <Condition>tool.system = "salesforce"</Condition>
+    <TargetEndpoint>salesforce</TargetEndpoint>
+  </RouteRule>
+  <RouteRule name="knowledge-base">
+    <Condition>tool.system = "knowledge-base"</Condition>
+    <TargetEndpoint>knowledge-base</TargetEndpoint>
+  </RouteRule>
+  <RouteRule name="no-route"/>
+</ProxyEndpoint>

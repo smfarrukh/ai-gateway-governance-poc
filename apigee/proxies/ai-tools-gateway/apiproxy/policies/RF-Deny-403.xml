@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<RaiseFault continueOnError="false" enabled="true" name="RF-Deny-403">
+  <DisplayName>RF-Deny-403</DisplayName>
+  <FaultResponse>
+    <Set>
+      <Headers>
+        <Header name="x-ai-gateway-decision">{gw.decision}</Header>
+      </Headers>
+      <Payload contentType="application/json">{gw.deny_body}</Payload>
+      <StatusCode>403</StatusCode>
+      <ReasonPhrase>Forbidden</ReasonPhrase>
+    </Set>
+  </FaultResponse>
+  <IgnoreUnresolvedVariables>true</IgnoreUnresolvedVariables>
+</RaiseFault>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Quota continueOnError="false" enabled="true" name="Q-TokenQuota-Enforce">
+  <DisplayName>Q-TokenQuota-Enforce</DisplayName>
+  <!-- Checks (does not add to) the agent's hourly token budget before calling a model. -->
+  <Allow countRef="gw.token_quota" count="10000"/>
+  <Interval>1</Interval>
+  <TimeUnit>hour</TimeUnit>
+  <Identifier ref="client_id"/>
+  <Distributed>true</Distributed>
+  <Synchronous>true</Synchronous>
+  <SharedName>llm-token-budget</SharedName>
+  <EnforceOnly>true</EnforceOnly>
+</Quota>

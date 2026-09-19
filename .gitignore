@@ -1,0 +1,17 @@
+# secrets
+config/poc.env
+.env
+!.env.example
+**/agentcore/.env.local
+
+# python
+.venv/
+__pycache__/
+*.pyc
+
+# generated
+salesagent/
+node_modules/
+
+# internal build guides are kept out of the public repo
+docs/

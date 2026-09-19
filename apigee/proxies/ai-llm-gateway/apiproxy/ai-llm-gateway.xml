@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<APIProxy name="ai-llm-gateway">
+  <DisplayName>AI LLM Gateway</DisplayName>
+  <Description>One governed, OpenAI-compatible endpoint for every agent in every cloud. Routes to Gemini (Vertex AI), Azure OpenAI and Amazon Bedrock.</Description>
+</APIProxy>

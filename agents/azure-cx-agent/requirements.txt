@@ -1,0 +1,6 @@
+agent-framework-core>=1.18
+agent-framework-openai>=1.14
+fastapi>=0.115
+uvicorn[standard]>=0.30
+httpx>=0.28
+mcp>=1.24,<2

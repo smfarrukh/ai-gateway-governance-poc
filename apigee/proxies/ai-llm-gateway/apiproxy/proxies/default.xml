@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<ProxyEndpoint name="default">
+  <Description>Governed entry point: POST {basepath}/chat/completions</Description>
+  <FaultRules>
+    <FaultRule name="invalid-agent-key">
+      <Condition>(fault.name = "InvalidApiKey") or (fault.name = "FailedToResolveAPIKey") or (fault.name = "ApiKeyNotApproved") or (fault.name = "InvalidApiKeyForGivenResource") or (fault.name = "consumer_key_expired") or (fault.name = "app_not_approved") or (fault.name = "developer_status_not_active")</Condition>
+      <Step>
+        <Name>AM-AuthFailed</Name>
+      </Step>
+    </FaultRule>
+    <FaultRule name="rate-limited">
+      <Condition>fault.name = "SpikeArrestViolation"</Condition>
+      <Step>
+        <Name>AM-RateLimited</Name>
+      </Step>
+    </FaultRule>
+    <FaultRule name="token-quota-exceeded">
+      <Condition>fault.name = "QuotaViolation"</Condition>
+      <Step>
+        <Name>AM-QuotaExceeded</Name>
+      </Step>
+    </FaultRule>
+  </FaultRules>
+  <DefaultFaultRule name="audit-on-error">
+    <AlwaysEnforce>true</AlwaysEnforce>
+    <Step>
+      <Name>JS-BuildAudit</Name>
+    </Step>
+  </DefaultFaultRule>
+  <PreFlow name="PreFlow">
+    <Request>
+        <Step>
+          <Name>VK-VerifyAgentKey</Name>
+        </Step>
+        <Step>
+          <Name>SA-AgentRateLimit</Name>
+        </Step>
+    </Request>
+    <Response/>
+  </PreFlow>
+  <Flows>
+    <Flow name="chat-completions">
+      <Description>Model allowlist, token budget, safety screening, routing</Description>
+      <Condition>(proxy.pathsuffix MatchesPath "/chat/completions") and (request.verb = "POST")</Condition>
+      <Request>
+        <Step>
+          <Name>JS-LLMRequestGuard</Name>
+        </Step>
+        <Step>
+          <Name>RF-Deny-400</Name>
+          <Condition>(llm.denied = "true") and (gw.deny_status = "400")</Condition>
+        </Step>
+        <Step>
+          <Name>RF-Deny-403</Name>
+          <Condition>(llm.denied = "true") and (gw.deny_status = "403")</Condition>
+        </Step>
+        <Step>
+          <Name>Q-TokenQuota-Enforce</Name>
+        </Step>
+        <Step>
+          <Name>SC-ModelArmor</Name>
+          <Condition>llm.scan_length != "0"</Condition>
+        </Step>
+        <Step>
+          <Name>JS-ModelArmorVerdict</Name>
+          <Condition>llm.scan_length != "0"</Condition>
+        </Step>
+        <Step>
+          <Name>RF-Deny-400</Name>
+          <Condition>llm.denied = "true"</Condition>
+        </Step>
+      </Request>
+      <Response>
+        <Step>
+          <Name>JS-CaptureUsage</Name>
+        </Step>
+        <Step>
+          <Name>Q-TokenQuota-Count</Name>
+        </Step>
+      </Response>
+    </Flow>
+    <Flow name="not-found">
+      <Request>
+        <Step>
+          <Name>RF-NotFound</Name>
+        </Step>
+      </Request>
+      <Response/>
+    </Flow>
+  </Flows>
+  <PostFlow name="PostFlow">
+    <Request/>
+    <Response>
+        <Step>
+          <Name>JS-BuildAudit</Name>
+        </Step>
+    </Response>
+  </PostFlow>
+  <PostClientFlow name="PostClientFlow">
+    <Response>
+        <Step>
+          <Name>ML-AuditLog</Name>
+        </Step>
+    </Response>
+  </PostClientFlow>
+  <HTTPProxyConnection>
+    <BasePath>/ai/llm/v1</BasePath>
+  </HTTPProxyConnection>
+  <RouteRule name="vertex-gemini">
+    <Condition>llm.backend = "vertex"</Condition>
+    <TargetEndpoint>vertex-gemini</TargetEndpoint>
+  </RouteRule>
+  <RouteRule name="azure-openai">
+    <Condition>llm.backend = "azure"</Condition>
+    <TargetEndpoint>azure-openai</TargetEndpoint>
+  </RouteRule>
+  <RouteRule name="aws-bedrock">
+    <Condition>llm.backend = "bedrock"</Condition>
+    <TargetEndpoint>aws-bedrock</TargetEndpoint>
+  </RouteRule>
+  <RouteRule name="no-route"/>
+</ProxyEndpoint>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-SetBedrockKey">
+  <DisplayName>AM-SetBedrockKey</DisplayName>
+  <Set>
+    <Headers>
+      <Header name="Authorization">Bearer {private.bedrock_api_key}</Header>
+    </Headers>
+  </Set>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+</AssignMessage>

@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "salesagent"
+version = "0.1.0"
+description = "Sales Account agent (Strands on AgentCore Runtime) governed by the Apigee AI gateway"
+requires-python = ">=3.10"
+dependencies = [
+    "aws-opentelemetry-distro ~= 0.18.0",
+    "bedrock-agentcore >= 1.9.1",
+    "botocore[crt] >= 1.35.0",
+    "httpx >= 0.28",
+    "mcp >= 1.24, < 2.2",
+    "openai >= 1.68, < 3",
+    "strands-agents >= 1.56",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["."]

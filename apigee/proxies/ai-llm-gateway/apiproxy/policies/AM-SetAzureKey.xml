@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<AssignMessage continueOnError="false" enabled="true" name="AM-SetAzureKey">
+  <DisplayName>AM-SetAzureKey</DisplayName>
+  <Set>
+    <Headers>
+      <Header name="api-key">{private.azure_openai_key}</Header>
+    </Headers>
+  </Set>
+  <IgnoreUnresolvedVariables>false</IgnoreUnresolvedVariables>
+</AssignMessage>
